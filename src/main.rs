@@ -1,5 +1,6 @@
 mod day1;
 mod day2;
+mod day3;
 
 fn main() -> std::io::Result<()> {
     let mut path = "input_data/day1.txt";
@@ -19,6 +20,11 @@ fn main() -> std::io::Result<()> {
     let count = day2::count_valid_or_correctable_sequences(path)?;
 
     println!("Count of valid or correctable sequences: {}", count);
+
+    path = "input_data/day3.txt";
+    let sum = day3::process_file_content(path)?;
+
+    println!("Sum of multiplication functions: {}", sum);
 
     Ok(())
 }
