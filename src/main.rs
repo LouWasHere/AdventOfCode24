@@ -6,5 +6,9 @@ fn main() -> std::io::Result<()> {
 
     println!("Total absolute distance: {}", total);
 
+    let similarity_score = day1::day1_2(path)?;
+
+    println!("Total similarity score: {}", similarity_score);
+
     Ok(())
 }
