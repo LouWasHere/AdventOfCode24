@@ -16,5 +16,9 @@ fn main() -> std::io::Result<()> {
 
     println!("Count of valid sequences: {}", count);
 
+    let count = day2::count_valid_or_correctable_sequences(path)?;
+
+    println!("Count of valid or correctable sequences: {}", count);
+
     Ok(())
 }

@@ -42,8 +42,30 @@ fn is_valid_sequence(numbers: &[i32]) -> bool {
     true
 }
 
+fn is_valid_or_can_be_made_valid(numbers: &[i32]) -> bool {
+    if is_valid_sequence(numbers) {
+        return true;
+    }
+
+    for i in 0..numbers.len() {
+        let mut modified_numbers = numbers.to_vec();
+        modified_numbers.remove(i);
+        if is_valid_sequence(&modified_numbers) {
+            return true;
+        }
+    }
+
+    false
+}
+
 pub(crate) fn count_valid_sequence(path: &str) -> io::Result<usize> {
     let all_numbers = read_test(path)?;
     let count = all_numbers.iter().filter(|&numbers| is_valid_sequence(numbers)).count();
+    Ok(count)
+}
+
+pub(crate) fn count_valid_or_correctable_sequences(path: &str) -> io::Result<usize> {
+    let all_numbers = read_test(path)?;
+    let count = all_numbers.iter().filter(|&numbers| is_valid_or_can_be_made_valid(numbers)).count();
     Ok(count)
 }
