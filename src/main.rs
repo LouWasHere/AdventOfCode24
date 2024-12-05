@@ -1,6 +1,8 @@
 mod day1;
 mod day2;
 mod day3;
+mod day4;
+mod day5;
 
 fn main() -> std::io::Result<()> {
     let mut path = "input_data/day1.txt";
@@ -23,6 +25,15 @@ fn main() -> std::io::Result<()> {
 
     let new_sum = day3::process_file_part2(path)?;
     println!("Sum of enabled multiplication functions: {}", new_sum);
+
+    let xmas_instances = day4::xmas_instances("input_data/day4.txt")?;
+    println!("XMAS instances: {}", xmas_instances);
+
+    let mas_pairs = day4::mas_pairs("input_data/day4.txt")?;
+    println!("MAS pairs: {}", mas_pairs);
+
+    let valid_orderings = day5::valid_orderings("input_data/day5_1.txt", "input_data/day5_2.txt")?;
+    println!("Sum of middle values of valid orders: {}", valid_orderings);
 
     Ok(())
 }
