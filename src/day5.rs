@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap};
 use std::fs;
 use std::io::{self, BufRead};
 
@@ -65,14 +65,47 @@ fn validate_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[String]) 
     true
 }
 
-pub fn valid_orderings(path1: &str, path2: &str) -> io::Result<i32> {
+fn sort_incorrect_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[String]) -> Vec<String> {
+    let mut sequence = sequence.to_vec();
+    let mut sorted_sequence = Vec::new();
+
+    fn process_value(
+        graph: &HashMap<String, Vec<String>>,
+        sequence: &mut Vec<String>,
+        sorted_sequence: &mut Vec<String>,
+        value: String,
+    ) {
+        if let Some(dependents) = graph.get(&value) {
+            for dependent in dependents {
+                if sequence.contains(dependent) {
+                    process_value(graph, sequence, sorted_sequence, dependent.clone());
+                }
+            }
+        }
+        if let Some(pos) = sequence.iter().position(|x| *x == value) {
+            sorted_sequence.push(sequence.remove(pos));
+        }
+    }
+
+    while !sequence.is_empty() {
+        let value = sequence[0].clone();
+        process_value(&graph, &mut sequence, &mut sorted_sequence, value);
+    }
+
+    sorted_sequence
+}
+
+fn process_sequences<F>(path1: &str, path2: &str, validate: F) -> io::Result<i32>
+where
+    F: Fn(&HashMap<String, Vec<String>>, &mut Vec<String>) -> bool,
+{
     let rules = read_rules_from_file(path1)?;
     let graph = build_graph(rules);
-    let sequences = read_sequences_from_file(path2)?;
+    let mut sequences = read_sequences_from_file(path2)?;
     let mut total_middle_value = 0;
 
-    for sequence in sequences {
-        if validate_sequence(&graph, &sequence) {
+    for sequence in &mut sequences {
+        if validate(&graph, sequence) {
             if let Some(middle_value) = sequence.get(sequence.len() / 2) {
                 if let Ok(value) = middle_value.parse::<i32>() {
                     total_middle_value += value;
@@ -82,4 +115,20 @@ pub fn valid_orderings(path1: &str, path2: &str) -> io::Result<i32> {
     }
 
     Ok(total_middle_value)
+}
+
+pub fn valid_orderings(path1: &str, path2: &str) -> io::Result<i32> {
+    process_sequences(path1, path2, |graph, sequence| validate_sequence(graph, sequence))
+}
+
+pub fn invalid_sequence_totals(path1: &str, path2: &str) -> io::Result<i32> {
+    process_sequences(path1, path2, |graph, sequence| {
+        if !validate_sequence(graph, sequence) {
+            let sorted_sequence = sort_incorrect_sequence(graph, sequence);
+            *sequence = sorted_sequence;
+            true
+        } else {
+            false
+        }
+    })
 }

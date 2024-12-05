@@ -35,5 +35,8 @@ fn main() -> std::io::Result<()> {
     let valid_orderings = day5::valid_orderings("input_data/day5_1.txt", "input_data/day5_2.txt")?;
     println!("Sum of middle values of valid orders: {}", valid_orderings);
 
+    let invalid_orderings = day5::invalid_sequence_totals("input_data/day5_1.txt", "input_data/day5_2.txt")?;
+    println!("Sum of middle values of sorted invalid orders: {}", invalid_orderings);
+
     Ok(())
 }
