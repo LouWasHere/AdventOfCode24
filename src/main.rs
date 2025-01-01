@@ -42,5 +42,7 @@ fn main() -> std::io::Result<()> {
     let visited = day6::process_day6_file("input_data/day6.txt")?;
     println!("Visited locations: {}", visited);
 
+    let visited_with_dir = day6::process_day6_file_part2("input_data/day6.txt")?;
+    println!("Obstacles with no loop: {}", visited_with_dir);
     Ok(())
 }
