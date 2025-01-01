@@ -2,6 +2,7 @@ use std::collections::{HashMap};
 use std::fs;
 use std::io::{self, BufRead};
 
+// Reads the input file into an array of (string, string) tuples
 fn read_rules_from_file(path: &str) -> io::Result<Vec<(String, String)>> {
     let file = fs::File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -18,6 +19,7 @@ fn read_rules_from_file(path: &str) -> io::Result<Vec<(String, String)>> {
     Ok(rules)
 }
 
+// Parses the tuples to create a HashMap to represent the rules that the sequences must follow in the format: X: {Y,...} where X must come before Y
 fn build_graph(rules: Vec<(String, String)>) -> HashMap<String, Vec<String>> {
     let mut graph = HashMap::new();
 
@@ -29,6 +31,7 @@ fn build_graph(rules: Vec<(String, String)>) -> HashMap<String, Vec<String>> {
     graph
 }
 
+// Reads the sequences to be tested from the input file.
 fn read_sequences_from_file(path: &str) -> io::Result<Vec<Vec<String>>> {
     let file = fs::File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -43,6 +46,7 @@ fn read_sequences_from_file(path: &str) -> io::Result<Vec<Vec<String>>> {
     Ok(sequences)
 }
 
+// Function that queries the HashMap to validate whether a sequence is valid (just by checking if a digit is a dependant of the ones succeeding it)
 fn validate_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[String]) -> bool {
     let mut position = HashMap::new();
 
@@ -65,10 +69,14 @@ fn validate_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[String]) 
     true
 }
 
+// Function that takes in an invalid sequence and sorts it according to the rules in the HashMap. Uses a recursive function within this function
 fn sort_incorrect_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[String]) -> Vec<String> {
     let mut sequence = sequence.to_vec();
     let mut sorted_sequence = Vec::new();
 
+    // Recursive sub-function that takes a value and checks if any values in its list appear in the sequence. If yes, call the function again on that value
+    // If not, then place that value at the end of the sorted sequence (or as close to the end as possible) and dequeue it from the stack
+    // Repeat until all values have been placed
     fn process_value(
         graph: &HashMap<String, Vec<String>>,
         sequence: &mut Vec<String>,
@@ -95,6 +103,7 @@ fn sort_incorrect_sequence(graph: &HashMap<String, Vec<String>>, sequence: &[Str
     sorted_sequence
 }
 
+// Function that exists to minimize code repetition in the valid_orderings() and invalid_sequence_totals() functions since the underlying result is calculated similarly
 fn process_sequences<F>(path1: &str, path2: &str, validate: F) -> io::Result<i32>
 where
     F: Fn(&HashMap<String, Vec<String>>, &mut Vec<String>) -> bool,
@@ -117,10 +126,12 @@ where
     Ok(total_middle_value)
 }
 
+// Just returns the total of the middle values of valid sequences
 pub fn valid_orderings(path1: &str, path2: &str) -> io::Result<i32> {
     process_sequences(path1, path2, |graph, sequence| validate_sequence(graph, sequence))
 }
 
+// Returns the total of the middle values of all invalid sequences after being made valid by sorting
 pub fn invalid_sequence_totals(path1: &str, path2: &str) -> io::Result<i32> {
     process_sequences(path1, path2, |graph, sequence| {
         if !validate_sequence(graph, sequence) {

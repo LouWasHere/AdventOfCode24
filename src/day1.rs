@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 
+// Function to read thr input file into two distinct arrays
 fn read_numbers(path: &str) -> io::Result<(Vec<i32>, Vec<i32>)> {
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -23,6 +24,7 @@ fn read_numbers(path: &str) -> io::Result<(Vec<i32>, Vec<i32>)> {
     Ok((left_numbers, right_numbers))
 }
 
+// Simply sorts both arrays then calculates the total absolute distance
 pub fn day1_1(path: &str) -> io::Result<i32> {
     let (mut left_numbers, mut right_numbers) = read_numbers(path)?;
 
@@ -37,6 +39,7 @@ pub fn day1_1(path: &str) -> io::Result<i32> {
     Ok(total)
 }
 
+// Creates a HashMap to keep track of occurrences of each digit in order to then calculate a similarity score
 pub fn day1_2(path: &str) -> io::Result<i32> {
     let (left_numbers, right_numbers) = read_numbers(path)?;
 

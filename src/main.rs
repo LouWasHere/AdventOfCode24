@@ -3,6 +3,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 fn main() -> std::io::Result<()> {
     let mut path = "input_data/day1.txt";
@@ -37,6 +38,9 @@ fn main() -> std::io::Result<()> {
 
     let invalid_orderings = day5::invalid_sequence_totals("input_data/day5_1.txt", "input_data/day5_2.txt")?;
     println!("Sum of middle values of sorted invalid orders: {}", invalid_orderings);
+
+    let visited = day6::process_day6_file("input_data/day6.txt")?;
+    println!("Visited locations: {}", visited);
 
     Ok(())
 }

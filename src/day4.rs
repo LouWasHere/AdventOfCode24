@@ -1,6 +1,7 @@
 use std::fs;
 use std::io::{self, BufRead};
 
+// Function that reads the input file into a matrix of characters
 fn read_file_to_matrix(path: &str) -> io::Result<Vec<Vec<char>>> {
     let file = fs::File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -11,10 +12,12 @@ fn read_file_to_matrix(path: &str) -> io::Result<Vec<Vec<char>>> {
     Ok(matrix)
 }
 
+// Validates whether a position on the matrix is valid (within bounds).
 fn is_valid_position(x: isize, y: isize, rows: isize, cols: isize) -> bool {
     x >= 0 && x < rows && y >= 0 && y < cols
 }
 
+// For part 1, checks possible directions for XMAS strings when an X is found. Counts instances of XMAS located
 fn search_word(matrix: &[Vec<char>], word: &str) -> usize {
     let directions = [
         (0, 1),  // right
@@ -54,6 +57,7 @@ fn search_word(matrix: &[Vec<char>], word: &str) -> usize {
     count
 }
 
+// For part 2, searches for instances of A. When A is found, check the diagonally adjacent cells and see whether the diagonals both contain MAS instances
 fn search_mas_pairs(matrix: &[Vec<char>]) -> usize {
     let rows = matrix.len() as isize;
     let cols = matrix[0].len() as isize;
@@ -120,6 +124,7 @@ fn search_mas_pairs(matrix: &[Vec<char>]) -> usize {
     count
 }
 
+// Provides the search string and returns instances of it
 pub fn xmas_instances(path: &str) -> io::Result<i32> {
     let matrix = read_file_to_matrix(path)?;
     let word = "XMAS";
@@ -127,6 +132,7 @@ pub fn xmas_instances(path: &str) -> io::Result<i32> {
     Ok(count)
 }
 
+// Provides nothing but returns the number of X-MAS patterns found
 pub fn mas_pairs(path: &str) -> io::Result<i32> {
     let matrix = read_file_to_matrix(path)?;
     let count = search_mas_pairs(&matrix) as i32;

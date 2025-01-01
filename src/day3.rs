@@ -1,10 +1,12 @@
 use std::fs;
 use regex::Regex;
 
+// Simply reads the file into a string
 fn read_file(path: &str) -> std::io::Result<String> {
     fs::read_to_string(path)
 }
 
+// Applies a RegEx formula to capture valid uses of a "mul()" function in the string and then total the multiplications contained within
 pub fn process_file_content(path: &str) -> std::io::Result<i32> {
     let content = read_file(path)?;
     let re = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
@@ -18,6 +20,7 @@ pub fn process_file_content(path: &str) -> std::io::Result<i32> {
     Ok(sum)
 }
 
+// Applies a slightly more complicated RegEx formula to capture "mul()"s, "do()"s and "don't()"s, then modifies the behavior of the sum depending on what is captured
 pub fn process_file_part2(path: &str) -> std::io::Result<i32> {
     let content = read_file(path)?;
     let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|(do\(\)|don't\(\))").unwrap();

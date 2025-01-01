@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 
+// Function that reads in the test data into an array of Vectors that contain different numbers of integers
 fn read_test(path: &str) -> io::Result<Vec<Vec<i32>>> {
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -19,6 +20,7 @@ fn read_test(path: &str) -> io::Result<Vec<Vec<i32>>> {
     Ok(all_numbers)
 }
 
+// Validates a sequence based on the rules provided. Namely, checks if the difference between numbers is between 1 and 3, and ensures numbers are always decreasing/increasing
 fn is_valid_sequence(numbers: &[i32]) -> bool {
     if numbers.len() < 2 {
         return true;
@@ -42,6 +44,7 @@ fn is_valid_sequence(numbers: &[i32]) -> bool {
     true
 }
 
+// Checks if a sequence is valid already, but if not, checks to see if a sequence can be made valid by removing one value
 fn is_valid_or_can_be_made_valid(numbers: &[i32]) -> bool {
     if is_valid_sequence(numbers) {
         return true;
@@ -58,12 +61,14 @@ fn is_valid_or_can_be_made_valid(numbers: &[i32]) -> bool {
     false
 }
 
+// Provides a list of sequences and returns the number of valid ones.
 pub(crate) fn count_valid_sequence(path: &str) -> io::Result<usize> {
     let all_numbers = read_test(path)?;
     let count = all_numbers.iter().filter(|&numbers| is_valid_sequence(numbers)).count();
     Ok(count)
 }
 
+// Provides a list of sequences and returns the number of valid ones plus ones that can be made valid by removing one value
 pub(crate) fn count_valid_or_correctable_sequences(path: &str) -> io::Result<usize> {
     let all_numbers = read_test(path)?;
     let count = all_numbers.iter().filter(|&numbers| is_valid_or_can_be_made_valid(numbers)).count();
